@@ -5,7 +5,7 @@ describe('Updating records', () => {
     let boo
     
     beforeEach((done) => {
-        boo = new User({ name: 'boo' });
+        boo = new User({ name: 'boo', likes: 0});
         boo.save()
             .then(() => done());
     });
@@ -48,6 +48,15 @@ describe('Updating records', () => {
             User.findByIdAndUpdate(boo._id, { name: 'norma' }),
             done
         );
+    });
+
+    it('a user can have their likes incremented by 10', (done) => {
+        User.update({ name: 'boo' }, { $inc: { likes: 10 } })
+            .then(() => User.findOne({ name: 'boo' }))
+            .then((user) => {
+                assert(user.likes === 10);
+                done();
+            });
     });
 
 })
